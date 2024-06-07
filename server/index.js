@@ -35,6 +35,21 @@ app.post('/issues', (req, res) => {
     res.status(201).json(newIssue);
 });
 
+app.put('/issues/:id', (req, res) => {
+    const { id } = req.params;
+    const updatedIssue = req.body;
+    const issues = readDataFromFile();
+    const index = issues.findIndex(issue => issue.id === id);
+    if (index !== -1) {
+      issues[index] = { ...issues[index], ...updatedIssue };
+      writeDataToFile(issues);
+      console.log('Issue updated:', issues[index]);
+      res.json(issues[index]);
+    } else {
+      res.status(404).send('Issue not found');
+    }
+  });
+
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });

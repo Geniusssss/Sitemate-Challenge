@@ -26,7 +26,8 @@ const IssueList = () => {
   };
 
   const handleUpdate = (issue) => {
-
+    setSelectedIssue(issue);
+    setDialogOpen(true);
   };
 
   const handleDelete = async (id) => {
