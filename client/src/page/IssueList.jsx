@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Issue from '../component/Issue';
 import EditDialog from '../component/EditDialog';
+import { v4 as uuidv4 } from 'uuid';
 import { Container, Typography, Box, Button } from '@mui/material';
 
 const IssueList = () => {
@@ -37,7 +38,7 @@ const IssueList = () => {
     if (issue.id) {
       await axios.put(`http://localhost:5000/issues/${issue.id}`, issue);
     } else {
-      await axios.post('http://localhost:5000/issues', issue);
+      await axios.post('http://localhost:5000/issues', { id: uuidv4(), ...issue });
     }
     fetchIssues();
     setDialogOpen(false);

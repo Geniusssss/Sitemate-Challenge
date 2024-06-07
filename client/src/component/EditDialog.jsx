@@ -24,6 +24,7 @@ const EditDialog = ({ open, handleClose, handleConfirm, issue }) => {
       <DialogContent>
         <TextField
           autoFocus
+          required
           margin="dense"
           label="Title"
           type="text"
