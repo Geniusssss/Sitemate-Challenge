@@ -41,14 +41,28 @@ app.put('/issues/:id', (req, res) => {
     const issues = readDataFromFile();
     const index = issues.findIndex(issue => issue.id === id);
     if (index !== -1) {
-      issues[index] = { ...issues[index], ...updatedIssue };
-      writeDataToFile(issues);
-      console.log('Issue updated:', issues[index]);
-      res.json(issues[index]);
+        issues[index] = { ...issues[index], ...updatedIssue };
+        writeDataToFile(issues);
+        console.log('Issue updated:', issues[index]);
+        res.json(issues[index]);
     } else {
-      res.status(404).send('Issue not found');
+        res.status(404).send('Issue not found');
     }
-  });
+});
+
+app.delete('/issues/:id', (req, res) => {
+    const { id } = req.params;
+    const issues = readDataFromFile();
+    const index = issues.findIndex(issue => issue.id === id);
+    if (index !== -1) {
+        const deletedIssue = issues.splice(index, 1);
+        writeDataToFile(issues);
+        console.log('Issue deleted:', deletedIssue[0]);
+        res.json(deletedIssue[0]);
+    } else {
+        res.status(404).send('Issue not found');
+    }
+});
 
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
