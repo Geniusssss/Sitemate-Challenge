@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Issue from '../component/Issue';
+import EditDialog from '../component/EditDialog';
+import { Container, Typography, Box, Button } from '@mui/material';
 
 const IssueList = () => {
   const [issues, setIssues] = useState([]);
+  const [selectedIssue, setSelectedIssue] = useState(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   useEffect(() => {
     fetchIssues();
@@ -15,6 +19,11 @@ const IssueList = () => {
     setIssues(response.data);
   };
 
+  const handleAdd = () => {
+    setSelectedIssue(null);
+    setDialogOpen(true);
+  };
+
   const handleUpdate = (issue) => {
 
   };
@@ -24,12 +33,34 @@ const IssueList = () => {
     fetchIssues();
   };
 
+  const handleConfirm = async (issue) => {
+    if (issue.id) {
+      await axios.put(`http://localhost:5000/issues/${issue.id}`, issue);
+    } else {
+      await axios.post('http://localhost:5000/issues', issue);
+    }
+    fetchIssues();
+    setDialogOpen(false);
+  };
+
   return (
-    <div>
+    <Container style={{ marginTop: '20px', marginBottom: '20px' }}>
+      <Typography variant="h4" component="h1" gutterBottom>
+        Issue List
+      </Typography>
+      <Box display="flex" justifyContent="flex-end" mb={2}>
+        <Button onClick={handleAdd} variant="contained">Add Issue</Button>
+      </Box>
       {issues.map((issue) => (
         <Issue key={issue.id} issue={issue} onUpdate={handleUpdate} onDelete={handleDelete} />
       ))}
-    </div>
+      <EditDialog
+        open={dialogOpen}
+        handleClose={() => setDialogOpen(false)}
+        handleConfirm={handleConfirm}
+        issue={selectedIssue}
+      />
+    </Container>
   );
 };
 
